@@ -30,7 +30,7 @@
         <!--导航菜单-->
         <el-menu
           :default-active="$route.path"
-          class="el-menu-vertical-demo"
+          class="el-menu-vertical-demo uncollapsed"
           @open="handleopen"
           @close="handleclose"
           @select="handleselect"
@@ -125,10 +125,11 @@
 </template>
 
 <script>
+import { getPort } from "../api/api";
 export default {
   data() {
     return {
-      sysName: "VUEADMIN",
+      sysName: "生啤后台管理系统",
       collapsed: false,
       sysUserName: "",
       sysUserAvatar: "",
@@ -183,6 +184,27 @@ export default {
       user = JSON.parse(user);
       this.sysUserName = user.name || "";
       this.sysUserAvatar = user.avatar || "";
+      //获取ip端口
+      getPort().then(res => {
+        console.log(res.data);
+        let url = "ws://" + res.data + "/BeerManage/socketServer/ddddddddd";
+        const ws = new WebSocket(
+          url
+          // "ws://192.168.0.151:8081/BeerManage/socketServer/ddddddddd"
+        );
+        console.log(ws);
+        ws.onopen = function() {
+          console.log("连接websocket");
+        };
+        // 接收消息时触发
+        ws.onmessage = function(response) {
+          console.log("数据");
+          console.log(response.data);
+        };
+        ws.onclose = function() {
+          console.log("连接断开");
+        };
+      });
     }
   }
 };
@@ -279,6 +301,9 @@ export default {
           display: none;
         }
       }
+      .uncollapsed {
+        width: 230px !important;
+      }
     }
     .menu-collapsed {
       flex: 0 0 60px;
@@ -312,6 +337,7 @@ export default {
       .content-wrapper {
         background-color: #fff;
         box-sizing: border-box;
+        padding: 40px 20px;
       }
     }
   }
