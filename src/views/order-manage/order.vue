@@ -27,10 +27,10 @@
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="orderid" label="订单号" width="120" sortable></el-table-column>
       <el-table-column label="操作" width="150">
-        <!-- <template slot-scope="scope">
+        <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
           <el-button size="small" @click="handleDel(scope.$index, scope.row)">发货</el-button>
-        </template>-->
+        </template>
       </el-table-column>
     </el-table>
 
