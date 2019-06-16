@@ -10,16 +10,26 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="cargoList" highlight-current-row v-loading="listLoading" style="width: 100%;">
+    <el-table :data="cargoList" v-loading="listLoading" style="width: 100%;">
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="cargoName" label="商品名称" sortable></el-table-column>
       <el-table-column label="商品图片">
         <template slot-scope="scope">
           <img
-            :src="imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
+            :src="scope.row.cargoImg==null?'':imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
             alt
             class="image"
             @click="preview(scope.row.cargoImg)"
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="详情图片">
+        <template slot-scope="scope">
+          <img
+            :src="scope.row.decripImg==null?'':imgBaseUrl+(scope.row.decripImg).split(',')[0]"
+            alt
+            class="image"
+            @click="preview(scope.row.decripImg)"
           >
         </template>
       </el-table-column>
@@ -27,7 +37,6 @@
       <el-table-column prop="nowPrice" label="现价" sortable></el-table-column>
       <el-table-column prop="quantity" label="库存" sortable></el-table-column>
       <el-table-column prop="sellQuantity" label="销量" sortable></el-table-column>
-      <!-- <el-table-column prop="decripImg" label="详情图" sortable></el-table-column> -->
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -38,23 +47,55 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="商品名称">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
+        <el-form-item label="商品编号" prop="cargoNo">
+          <el-input v-model="editForm.cargoNo" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="商品名称" prop="cargoName">
+          <el-input v-model="editForm.cargoName" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="商品图片">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+          <el-upload
+            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            list-type="picture-card"
+            accept="image/*"
+            :file-list="fileList1"
+            :multiple="isMultiple"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove3"
+            :on-success="handleAvatarSuccess3"
+            :on-error="handleAvatarFail"
+            ref="editUpload1"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
+        <el-form-item label="详情图片">
+          <el-upload
+            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            list-type="picture-card"
+            accept="image/*"
+            :file-list="fileList2"
+            :multiple="isMultiple"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove4"
+            :on-success="handleAvatarSuccess4"
+            :on-error="handleAvatarFail"
+            ref="editUpload2"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+        <el-form-item label="现价" prop="nowPrice">
+          <el-input-number v-model="editForm.nowPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
+        <el-form-item label="原价" prop="oldPrice">
+          <el-input-number v-model="editForm.oldPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="销量" prop="sellQuantity">
+          <el-input-number v-model="editForm.sellQuantity" :precision="0" :step="1" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="editForm.description"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -74,45 +115,41 @@
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
-            action="/BeerApp/oss/uploadFile"
+            action="http://localhost:3000/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
-            :limit="imgLimit"
             :multiple="isMultiple"
             :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
+            :on-remove="handleRemove1"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            :on-exceed="handleExceed"
             :on-error="handleAvatarFail"
+            ref="addUpload1"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="详情图片">
           <el-upload
-            action="/BeerApp/oss/uploadFile"
+            action="http://localhost:3000/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
-            :limit="imgLimit"
             :multiple="isMultiple"
             :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
+            :on-remove="handleRemove2"
             :on-success="handleAvatarSuccess1"
-            :before-upload="beforeAvatarUpload"
-            :on-exceed="handleExceed"
             :on-error="handleAvatarFail"
+            ref="addUpload2"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="现价">
+        <el-form-item label="现价" prop="nowPrice">
           <el-input-number v-model="addForm.nowPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
         </el-form-item>
-        <el-form-item label="原价">
+        <el-form-item label="原价" prop="oldPrice">
           <el-input-number v-model="addForm.oldPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
         </el-form-item>
-        <el-form-item label="销量">
+        <el-form-item label="销量" prop="sellQuantity">
           <el-input-number v-model="addForm.sellQuantity" :precision="0" :step="1" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="备注">
@@ -125,10 +162,15 @@
       </div>
     </el-dialog>
 
+    <!-- 商品图片轮播 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="imgBaseUrl+dialogImageUrl" alt>
+      <el-carousel>
+        <el-carousel-item v-for="item in dialogImageUrl" :key="item">
+          <img width="100%" :src="imgBaseUrl+item" alt>
+        </el-carousel-item>
+      </el-carousel>
     </el-dialog>
-
+    <!-- 上传图片预览 -->
     <el-dialog :visible.sync="visible">
       <img width="100%" :src="imageUrl" alt>
     </el-dialog>
@@ -148,11 +190,11 @@ export default {
   data() {
     return {
       isMultiple: true,
-      imgLimit: 10,
-
+      fileList2: [],
+      fileList1: [],
       dialogVisible: false,
       visible: false,
-      dialogImageUrl: "",
+      dialogImageUrl: [],
       imageUrl: "",
       imgBaseUrl: "/BeerApp/oss/getFile?id=",
       cargoList: [],
@@ -170,13 +212,15 @@ export default {
       },
       //编辑界面数据
       editForm: {
+        id: "",
         cargoNo: "",
         cargoName: "",
         cargoImg: [],
         decripImg: [],
         description: "",
         nowPrice: 0,
-        oldPrice: 0
+        oldPrice: 0,
+        sellQuantity: 0
       },
 
       addFormVisible: false, //新增界面是否显示
@@ -214,8 +258,28 @@ export default {
     },
     //显示编辑界面
     handleEdit: function(index, row) {
+      // this.editForm = Object.assign({}, row);
+      row = JSON.parse(JSON.stringify(row));
+      this.editForm = {
+        id: row.id,
+        cargoNo: row.cargoNo,
+        cargoName: row.cargoName,
+        cargoImg: row.cargoImg == null ? [] : row.cargoImg.split(","),
+        decripImg: row.decripImg == null ? [] : row.decripImg.split(","),
+        description: row.description,
+        nowPrice: row.nowPrice,
+        oldPrice: row.oldPrice,
+        sellQuantity: row.sellQuantity
+      };
+      this.fileList1 = [];
+      this.fileList2 = [];
+      for (let i of this.editForm.cargoImg) {
+        this.fileList1.push({ url: this.imgBaseUrl + i });
+      }
+      for (let j of this.editForm.decripImg) {
+        this.fileList2.push({ url: this.imgBaseUrl + j });
+      }
       this.editFormVisible = true;
-      this.editForm = Object.assign({}, row);
     },
     //显示新增界面
     handleAdd: function() {
@@ -237,20 +301,40 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
-            //NProgress.start();
-            let para = Object.assign({}, this.editForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            editUser(para).then(res => {
+            let para = {
+              id: this.editForm.id,
+              cargoImg: this.editForm.cargoImg.join(","),
+              cargoName: this.editForm.cargoName,
+              cargoNo: this.editForm.cargoNo,
+              decripImg: this.editForm.decripImg.join(","),
+              description: this.editForm.description,
+              nowPrice: this.editForm.nowPrice,
+              oldPrice: this.editForm.oldPrice,
+              sellQuantity: this.editForm.sellQuantity
+              //   quantity: 0,
+              //   spec: "string",
+              //   specificationList: [
+              //     {
+              //       cargoId: "string",
+              //       description: "string",
+              //       id: 0,
+              //       img: "string",
+              //       name: "string",
+              //       price: 0,
+              //       quantity: 0,
+              //       state: 0
+              //     }
+              //   ]
+            };
+            updateCargoList(JSON.stringify(para)).then(res => {
               this.editLoading = false;
-              //NProgress.done();
               this.$message({
                 message: "提交成功",
                 type: "success"
               });
               this.$refs["editForm"].resetFields();
+              this.$refs.editUpload1.clearFiles();
+              this.$refs.editUpload2.clearFiles();
               this.editFormVisible = false;
               this.getCargo();
             });
@@ -295,6 +379,8 @@ export default {
                 type: "success"
               });
               this.$refs["addForm"].resetFields();
+              this.$refs.addUpload1.clearFiles();
+              this.$refs.addUpload2.clearFiles();
               this.addFormVisible = false;
               this.getCargo();
             });
@@ -305,8 +391,8 @@ export default {
     //预览图
     preview(img) {
       console.log(img);
-      this.dialogImageUrl = img.split(",")[0];
-      this.dialogVisible = true;
+      this.dialogImageUrl = img == null ? [] : img.split(",");
+      this.dialogVisible = img == null ? false : true;
     },
     //上传成功回调
     handleAvatarSuccess(res, file) {
@@ -321,6 +407,18 @@ export default {
       this.addForm.decripImg.push(res.data.id);
       console.log(this.addForm.decripImg);
     },
+    handleAvatarSuccess3(res, file, fileList) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(fileList);
+      this.editForm.cargoImg.push(res.data.id);
+      console.log(this.editForm.cargoImg);
+    },
+    handleAvatarSuccess4(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(res);
+      this.editForm.decripImg.push(res.data.id);
+      console.log(this.editForm.decripImg);
+    },
     //上传失败回调
     handleAvatarFail(res) {
       this.$message({
@@ -329,22 +427,55 @@ export default {
       });
       console.log(res);
     },
-    //图片上传超过数量限制
-    handleExceed(files, fileList) {
-      this.$message({
-        message: "上传图片不能超过1张",
-        type: "error"
-      });
+    //删除图片时
+    handleRemove1(file, fileList) {
       console.log(file, fileList);
-    },
-    //上传前处理
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      //删除的项
+      let index = this.addForm.cargoImg.indexOf(file.response.data.id);
+      console.log(index);
+      this.addForm.cargoImg.splice(index, 1);
     },
     //删除图片时
-    handleRemove(file, fileList) {
+    handleRemove2(file, fileList) {
       console.log(file, fileList);
+      let index = this.addForm.decripImg.indexOf(file.response.data.id);
+      console.log(index);
+      this.addForm.decripImg.splice(index, 1);
+    },
+    handleRemove3(file, fileList) {
+      console.log(file, this.editForm.cargoImg, fileList);
+      let str = this.imgBaseUrl;
+      console.log(str);
+      let i = file.url.search(str);
+      console.log(file.url, "初始", i);
+      if (i > 0) {
+        //初始化的时候
+        let url = file.url.substr(i, file.url.length); //截取到id
+        console.log("截取到", url);
+        let index = this.editForm.cargoImg.indexOf(url);
+        this.editForm.cargoImg.splice(index, 1);
+      } else {
+        console.log("后续添加", url);
+        //后续添加
+        let index = this.editForm.cargoImg.indexOf(file.response.data.id);
+        this.editForm.cargoImg.splice(index, 1);
+      }
+      console.log(this.editForm.cargoImg);
+    },
+    handleRemove4(file, fileList) {
+      console.log(this.editForm.decripImg, fileList);
+      let i = file.url.search(this.imgBaseUrl);
+      if (i > 0) {
+        //初始化的时候
+        let url = file.url.substr(i, file.url.length); //截取到id
+        let index = this.editForm.decripImg.indexOf(url);
+        this.editForm.decripImg.splice(index, 1);
+      } else {
+        //后续添加
+        let index = this.editForm.decripImg.indexOf(file.response.data.id);
+        this.editForm.decripImg.splice(index, 1);
+      }
+      console.log(this.editForm.decripImg);
     },
     //预览
     handlePictureCardPreview(file) {
