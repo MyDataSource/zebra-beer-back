@@ -188,10 +188,7 @@ export default {
       getPort().then(res => {
         console.log(res.data);
         let url = "ws://" + res.data + "/BeerManage/socketServer/ddddddddd";
-        const ws = new WebSocket(
-          url
-          // "ws://192.168.0.151:8081/BeerManage/socketServer/ddddddddd"
-        );
+        const ws = new WebSocket(url);
         console.log(ws);
         ws.onopen = function() {
           console.log("连接websocket");

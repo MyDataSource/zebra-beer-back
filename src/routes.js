@@ -13,6 +13,8 @@ import echarts from './views/charts/echarts.vue'
 
 import banner from './views/image-manage/banner.vue'
 import cargo from './views/cargo-manage/cargo.vue'
+import order from './views/order-manage/order.vue'
+import standard from './views/standard-manage/standard.vue'
 let routes = [
     {
         path: '/login',
@@ -73,7 +75,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '商品管理',
-        iconCls: 'el-icon-message',//图标样式class
+        iconCls: 'fa fa-id-card-o',//图标样式class
         children: [
             { path: '/cargo', component: cargo, name: '商品管理' }
         ]
@@ -82,12 +84,27 @@ let routes = [
         path: '/',
         component: Home,
         name: '图片管理',
-        iconCls: 'el-icon-message',//图标样式class
+        iconCls: 'fa fa-id-card-o',//图标样式class
         children: [
-            { path: '/banner', component: banner, name: '首页轮播图' },
-            // { path: '/table', component: Table, name: 'Table' },
-            // { path: '/form', component: Form, name: 'Form' },
-            // { path: '/user', component: user, name: '列表' },
+            { path: '/banner', component: banner, name: '首页轮播图' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '订单管理',
+        iconCls: 'fa fa-id-card-o',//图标样式class
+        children: [
+            { path: '/order', component: order, name: '订单管理' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '规格管理',
+        iconCls: 'fa fa-id-card-o',//图标样式class
+        children: [
+            { path: '/standard', component: standard, name: '规格管理' }
         ]
     },
     {
