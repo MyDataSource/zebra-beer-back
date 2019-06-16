@@ -66,8 +66,16 @@ export default {
             username: this.ruleForm2.account,
             password: this.ruleForm2.checkPass
           };
-          sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "xx" }));
-          this.$router.push({ path: "/table" });
+          sessionStorage.setItem(
+            "user",
+            JSON.stringify({
+              id: 1,
+              name: "admin",
+              avatar:
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1560626129806&di=ff79239365e7f9daef28072718ee8e83&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F01%2F30%2F26%2F24573b0a9382ae2.jpg"
+            })
+          );
+          this.$router.push({ path: "/banner" });
           // requestLogin(loginParams).then(data => {
           //   this.logining = false;
           // let { msg, code, user } = data;

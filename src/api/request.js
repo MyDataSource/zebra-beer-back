@@ -11,6 +11,7 @@ axios.interceptors.request.use(
     e => {
         e.params = e.params || {}
         e.headers = e.headers || {}
+        console.log(e);
         //set 默认值
         return e
     },
