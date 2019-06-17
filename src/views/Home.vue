@@ -6,19 +6,25 @@
         class="logo"
         :class="collapsed?'logo-collapse-width':'logo-width'"
       >{{collapsed?'':sysName}}</el-col>
-      <el-col :span="10">
+      <el-col :span="8">
         <div class="tools" @click.prevent="collapse">
           <i class="fa fa-align-justify"></i>
         </div>
       </el-col>
-      <el-col :span="4" class="userinfo">
+      <el-col :span="6" class="userinfo">
+        <i
+          class="el-icon-message"
+          style="font-size:18px;margin-right:10px;"
+          v-if="msg"
+          @click="bindMsg"
+        ></i>
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner">
             <img :src="this.sysUserAvatar">
             {{sysUserName}}
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的消息</el-dropdown-item>
+            <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
             <el-dropdown-item>设置</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -129,6 +135,7 @@ import { getPort } from "../api/api";
 export default {
   data() {
     return {
+      msg: false,
       sysName: "生啤后台管理系统",
       collapsed: false,
       sysUserName: "",
@@ -176,6 +183,11 @@ export default {
       this.$refs.menuCollapsed.getElementsByClassName(
         "submenu-hook-" + i
       )[0].style.display = status ? "block" : "none";
+    },
+    //点击消息
+    bindMsg() {
+      this.msg = false;
+      this.$router.push({ path: "/order" });
     }
   },
   mounted() {
@@ -189,17 +201,48 @@ export default {
         console.log(res.data);
         let url = "ws://" + res.data + "/BeerManage/socketServer/ddddddddd";
         const ws = new WebSocket(url);
+        var that = this;
         console.log(ws);
         ws.onopen = function() {
           console.log("连接websocket");
+          that.$notify({
+            title: "建立连接",
+            message: "订单消息推送服务连接成功！",
+            type: "success",
+            duration: 2000
+          });
         };
         // 接收消息时触发
         ws.onmessage = function(response) {
-          console.log("数据");
           console.log(response.data);
+          if (response.data.code == 1000) {
+            sessionStorage.removeItem("user");
+            //其他地方登录、
+            that
+              .$confirm("当前账户已在其他地方登录！", "提示", {
+                confirmButtonText: "确定",
+                showCancelButton: false,
+                closeOnClickModal: false,
+                type: "warning"
+              })
+              .then(() => {
+                that.$router.push("/login");
+              })
+              .catch(() => {
+                that.$router.push("/login");
+              });
+          } else {
+            that.msg = true;
+          }
         };
         ws.onclose = function() {
           console.log("连接断开");
+          that.$notify({
+            title: "错误",
+            message: "服务器错误，无法接收实时订单消息",
+            type: "error",
+            duration: 0
+          });
         };
       });
     }

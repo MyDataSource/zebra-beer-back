@@ -35,10 +35,13 @@
       </el-table-column>
       <el-table-column prop="oldPrice" label="原价" sortable></el-table-column>
       <el-table-column prop="nowPrice" label="现价" sortable></el-table-column>
-      <el-table-column prop="quantity" label="库存" sortable></el-table-column>
       <el-table-column prop="sellQuantity" label="销量" sortable></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
+          <el-button type="primary" size="small" @click="handleLink(scope.row.id)">
+            设置规格
+            <!-- <router-link :to="{name:'规格管理',query:{id:scope.row.id}}">设置规格</router-link> -->
+          </el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         </template>
       </el-table-column>
@@ -55,7 +58,7 @@
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
-            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            action="http://localhost:8080/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
             :file-list="fileList1"
@@ -71,7 +74,7 @@
         </el-form-item>
         <el-form-item label="详情图片">
           <el-upload
-            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            action="http://localhost:8080/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
             :file-list="fileList2"
@@ -115,7 +118,7 @@
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
-            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            action="http://localhost:8080/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
             :multiple="isMultiple"
@@ -130,7 +133,7 @@
         </el-form-item>
         <el-form-item label="详情图片">
           <el-upload
-            action="http://localhost:3000/BeerApp/oss/uploadFile"
+            action="http://localhost:8080/BeerApp/oss/uploadFile"
             list-type="picture-card"
             accept="image/*"
             :multiple="isMultiple"
@@ -163,10 +166,10 @@
     </el-dialog>
 
     <!-- 商品图片轮播 -->
-    <el-dialog :visible.sync="dialogVisible">
-      <el-carousel>
-        <el-carousel-item v-for="item in dialogImageUrl" :key="item">
-          <img width="100%" :src="imgBaseUrl+item" alt>
+    <el-dialog :visible.sync="dialogVisible" class="bannerCover">
+      <el-carousel :autoplay="false" style="height:auto">
+        <el-carousel-item v-for="(item,index) in dialogImageUrl" :key="index">
+          <img width="100%" :src="imgBaseUrl+item" mode="widthFix">
         </el-carousel-item>
       </el-carousel>
     </el-dialog>
@@ -247,6 +250,12 @@ export default {
     };
   },
   methods: {
+    handleLink(id) {
+      console.log(id);
+      localStorage.setItem("cargoId", id);
+
+      this.$router.push({ path: "/standard" });
+    },
     //获取列表
     getCargo() {
       this.listLoading = true;
@@ -493,5 +502,8 @@ export default {
 .image {
   width: 100px;
   height: 100px;
+}
+.bannerCover .el-dialog__body {
+  overflow: scroll;
 }
 </style>
