@@ -58,7 +58,7 @@
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
-            action="http://localhost:8080/BeerApp/oss/uploadFile"
+            :action="baseUrl"
             list-type="picture-card"
             accept="image/*"
             :file-list="fileList1"
@@ -74,7 +74,7 @@
         </el-form-item>
         <el-form-item label="详情图片">
           <el-upload
-            action="http://localhost:8080/BeerApp/oss/uploadFile"
+            :action="baseUrl"
             list-type="picture-card"
             accept="image/*"
             :file-list="fileList2"
@@ -118,7 +118,7 @@
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
-            action="http://localhost:8080/BeerApp/oss/uploadFile"
+            :action="baseUrl"
             list-type="picture-card"
             accept="image/*"
             :multiple="isMultiple"
@@ -133,7 +133,7 @@
         </el-form-item>
         <el-form-item label="详情图片">
           <el-upload
-            action="http://localhost:8080/BeerApp/oss/uploadFile"
+            :action="baseUrl"
             list-type="picture-card"
             accept="image/*"
             :multiple="isMultiple"
@@ -183,6 +183,7 @@
 <script>
 import util from "../../common/js/util";
 import {
+  baseUrl,
   getCargoList,
   updateCargoList,
   addCargoList,
@@ -192,6 +193,7 @@ import {
 export default {
   data() {
     return {
+      baseUrl: baseUrl+"/BeerApp/oss/uploadFile",
       isMultiple: true,
       fileList2: [],
       fileList1: [],

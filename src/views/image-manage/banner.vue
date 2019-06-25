@@ -22,15 +22,15 @@
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <!-- <el-table-column type="index" width="60"></el-table-column> -->
-        <el-table-column prop="serial" label="排序编号" width="100"></el-table-column>
-        <el-table-column label="图片">
+        <el-table-column prop="serial" label="排序编号" min-width="100"></el-table-column>
+        <el-table-column label="图片" min-width="200">
           <template slot-scope="scope">
             <img :src="imgBaseUrl+scope.row.img" class="image">
           </template>
         </el-table-column>
         <el-table-column prop="url" label="跳转链接" min-width="100"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="200"></el-table-column>
-        <el-table-column label="排序操作" width="200">
+        <el-table-column prop="createTime" label="创建时间" min-width="180"></el-table-column>
+        <el-table-column label="排序操作" min-width="150">
           <template slot-scope="scope">
             <el-button
               @click="moveUp(scope.$index, scope.row)"
@@ -46,7 +46,7 @@
             >下移</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="300">
+        <el-table-column label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button type="danger" size="small" @click="deleteBanner(scope.$index, scope.row)">删除</el-button>
@@ -387,7 +387,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .hide .el-upload--picture-card {
   display: none;
 }
@@ -407,7 +407,8 @@ export default {
   font-weight: 300;
 }
 .image {
-  width: 100%;
+  width: 200px;
+  height: auto;
   display: block;
 }
 </style>

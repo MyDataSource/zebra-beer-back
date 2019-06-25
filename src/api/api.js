@@ -1,6 +1,7 @@
 import axios from './request';
 
-let base = 'http://localhost:8080';//http://localhost:8080
+let base = 'http://localhost:16443';//http://localhost:8080
+export const baseUrl = base;
 
 export const getPort = params => { return axios.get(`${base}/BeerManage/message/getIp`, { params: params }); };
 
