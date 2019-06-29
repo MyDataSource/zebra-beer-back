@@ -18,6 +18,7 @@
           v-if="msg"
           @click="bindMsg"
         ></i>
+        <!-- <audio id='audioPlay' src='/admin/images/30.wav' hidden='true'> -->
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner">
             <img :src="this.sysUserAvatar">

@@ -187,7 +187,7 @@ export default {
       this.editForm = item;
       this.fileList = [
         {
-          url:this.imgBaseUrl+item.img
+          url: this.imgBaseUrl + item.img
         }
       ];
       console.log(item);
@@ -234,11 +234,11 @@ export default {
             .then(() => {
               this.editLoading = true;
               console.log(this.editForm);
-              let item = JSON.parse(JSON.stringify(this.editForm))
-              for(let i=0; i<this.bannerList.length;i++){
-                if(this.bannerList[i].id == item.id){
-                  console.log('匹配');
-                  this.bannerList.splice(i,1,item);
+              let item = JSON.parse(JSON.stringify(this.editForm));
+              for (let i = 0; i < this.bannerList.length; i++) {
+                if (this.bannerList[i].id == item.id) {
+                  console.log("匹配");
+                  this.bannerList.splice(i, 1, item);
                 }
               }
               this.$message({
@@ -276,7 +276,14 @@ export default {
     },
     //点击确认更新
     updateBanner() {
-      console.log(this.bannerList);
+      console.log(JSON.stringify(this.bannerList));
+      if (this.bannerList.length == 0) {
+        this.$message({
+          message: "列表为空，不能提交！",
+          type: "warning"
+        });
+        return false;
+      }
       this.$confirm("确认提交吗?", "提示", {
         type: "warning"
       })
