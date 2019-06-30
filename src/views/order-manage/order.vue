@@ -28,13 +28,14 @@
       <el-table-column prop="id" label="订单号" sortable></el-table-column>
       <el-table-column prop="price" label="支付金额" sortable></el-table-column>
       <el-table-column prop="createTime" label="创建时间" sortable></el-table-column>
-      <el-table-column prop="state" label="订单状态" sortable></el-table-column>
-      <el-table-column prop="message" label="买家留言" sortable></el-table-column>
+       <el-table-column prop="stateName" label="订单状态" sortable></el-table-column>
+      <!-- <el-table-column prop="message" label="买家留言"></el-table-column> -->
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleView(scope.$index, scope.row)">查看</el-button>
           <el-button
             size="small"
+            type="primary"
             @click="handleDeliver(scope.$index, scope.row)"
             v-if="scope.row.state == 2"
           >发货</el-button>
@@ -44,17 +45,10 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <!-- <el-pagination
-        layout="prev, pager, next"
-        @current-change="handleCurrentChange"
-        :page-size="10"
-        :total="total"
-        style="float:right;"
-      ></el-pagination>-->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
+        :current-page="page"
         :page-sizes="[10, 20, 50, 100]"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
@@ -64,7 +58,7 @@
     </el-col>
 
     <!-- 查看 -->
-    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" title="订单查看">
       <el-form :model="viewItem" label-width="100px">
         <el-form-item label="订单编号">
           <span>{{viewItem.id}}</span>
@@ -85,13 +79,11 @@
           <div v-for="(items,index) in viewItem.cargoList" v-bind:key="index" class="cargoList">
             <img :src="imgBaseUrl+items.img" alt class="goodsImg" />
             <div class="msgCover">
-              <div class="msg1">
-                <span>{{items.cargoName}}</span>
-                <span style="color:#ef0007">￥{{items.price}}</span>
-              </div>
-              <div class="msg2">
+              <div>{{items.cargoName}}</div>
+              <div style="color:#ccc">包装:{{items.specName}}</div>
+              <div class="msgs">
+                <span style="color:#ef0007;font-weight:600">￥{{items.price}}</span>
                 <span>X{{items.quantity}}</span>
-                <span style="color:#ccc">包装:{{items.specName}}</span>
               </div>
             </div>
           </div>
@@ -114,26 +106,27 @@ export default {
       },
       options: [
         {
-          value: "null",
+          value: 0,
           label: "全部"
         },
         {
-          value: "1",
+          value: 1,
           label: "待付款"
         },
         {
-          value: "2",
+          value: 2,
           label: "待发货"
         },
         {
-          value: "3",
+          value: 3,
           label: "待收货"
         },
         {
-          value: "4",
+          value: 4,
           label: "待评价"
         }
       ],
+      map: new Map(),
       orders: [],
       total: 0,
       page: 1,
@@ -142,14 +135,14 @@ export default {
       listLoading: false,
       dialogVisible: false,
       viewItem: {
-        addressId: "",
-        cargoList: [],
-        createTime: "",
-        id: "",
-        message: "",
-        price: "",
-        state: "",
-        userId: ""
+        // addressId: "",
+        // cargoList: [],
+        // createTime: "",
+        // id: "",
+        // message: "",
+        // price: "",
+        // state: "",
+        // userId: ""
       }
     };
   },
@@ -174,6 +167,9 @@ export default {
       this.listLoading = true;
       getOrderList(para).then(res => {
         this.total = res.data.total;
+        for(let i of res.data.list){
+          i.stateName = this.map.get(i.state);
+        }
         this.orders = res.data.list;
         this.listLoading = false;
         console.log(res.data);
@@ -192,40 +188,42 @@ export default {
     handleView(index, row) {
       this.viewItem = row;
       this.dialogVisible = true;
+      //获取收货地址
     }
   },
   mounted() {
+    for (let i of this.options) {
+      this.map.set(i.value, i.label);
+    }
     this.getOrders();
+    console.log(this.map);
   }
 };
 </script>
 
 <style>
 .cargoList {
-  height: 100px;
+  height: auto;
   border: 1px solid #ccc;
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+.cargoList div {
+  line-height: 30px;
 }
 .goodsImg {
   width: 100px;
   height: 100px;
-  border: 1px solid #ccc;
+  margin-left: 10px;
+  /* margin-top: 10px;
+  align-self: flex-start; */
 }
 .msgCover {
-  width: calc(100% - 104px);
-  padding: 10px 30px;
-  display: flex;
-  flex-direction: column;
+  width: calc(100% - 112px);
+  padding: 10px;
 }
-.msg1 {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.msg2 {
+.msgs {
   flex: 1;
   display: flex;
   align-items: center;

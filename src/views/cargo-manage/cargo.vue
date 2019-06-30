@@ -48,7 +48,7 @@
     </el-table>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑商品" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="商品编号" prop="cargoNo">
           <el-input v-model="editForm.cargoNo" auto-complete="off"></el-input>
@@ -108,7 +108,7 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增商品" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <el-form-item label="商品编号" prop="cargoNo">
           <el-input v-model="addForm.cargoNo" auto-complete="off"></el-input>
