@@ -37,13 +37,13 @@
               icon="el-icon-top"
               size="small"
               v-if="scope.$index > 0"
-            >上移</el-button>
+            ></el-button>
             <el-button
               @click="moveDown(scope.$index, scope.row)"
               icon="el-icon-bottom"
               size="small"
               v-if="!(scope.$index+1 == bannerList.length)"
-            >下移</el-button>
+            ></el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="150">
@@ -60,7 +60,7 @@
       <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
     </el-col>
     <!--新增界面-->
-    <el-dialog title="新增轮播图" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增轮播图" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRule" ref="addForm">
         <el-form-item label="跳转链接" prop="url">
           <el-input v-model="addForm.url" auto-complete="off"></el-input>
@@ -90,7 +90,7 @@
     </el-dialog>
 
     <!--编辑界面-->
-    <el-dialog title="编辑轮播图" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑轮播图" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRule" ref="editForm">
         <el-form-item label="跳转链接" prop="url">
           <el-input v-model="editForm.url" auto-complete="off"></el-input>

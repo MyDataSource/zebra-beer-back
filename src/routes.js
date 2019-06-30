@@ -1,15 +1,10 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Main from './views/Main.vue'
-import Table from './views/nav1/Table.vue'
-import Form from './views/nav1/Form.vue'
-import user from './views/nav1/user.vue'
-import Page4 from './views/nav2/Page4.vue'
-import Page5 from './views/nav2/Page5.vue'
-import Page6 from './views/nav3/Page6.vue'
-import Page7 from './views/nav2/Page7.vue'
-import echarts from './views/charts/echarts.vue'
+// import Table from './views/nav1/Table.vue'
+// import Form from './views/nav1/Form.vue'
+// import user from './views/nav1/user.vue'
+// import echarts from './views/charts/echarts.vue'
 
 import banner from './views/image-manage/banner.vue'
 import cargo from './views/cargo-manage/cargo.vue'
@@ -28,54 +23,23 @@ let routes = [
         name: '',
         hidden: true
     },
-    //{ path: '/main', component: Main },
     // {
     //     path: '/',
     //     component: Home,
     //     name: '导航一',
     //     iconCls: 'el-icon-message',//图标样式class
     //     children: [
-    //         { path: '/main', component: Main, name: '主页', hidden: true },
-    //         { path: '/table', component: Table, name: 'Table' },
-    //         { path: '/form', component: Form, name: 'Form' },
-    //         { path: '/user', component: user, name: '列表' },
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '导航二',
-    //     iconCls: 'fa fa-id-card-o',
-    //     children: [
-    //         { path: '/page4', component: Page4, name: '页面4' },
-    //         { path: '/page5', component: Page5, name: '页面5' },
-    //         { path: '/page7', component: Page7, name: '页面7' },
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/page6', component: Page6, name: '导航三' }
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: 'Charts',
-    //     iconCls: 'fa fa-bar-chart',
-    //     children: [
-    //         { path: '/echarts', component: echarts, name: 'echarts' }
+    //         // { path: '/table', component: Table, name: 'Table' },
+    //         // { path: '/form', component: Form, name: 'Form' },
+    //         // { path: '/user', component: user, name: '列表' },
+    //         { path: '/echarts', component: echarts, name: '图表' },
     //     ]
     // },
     {
         path: '/',
         component: Home,
         name: '商品管理',
-        iconCls: 'fa fa-id-card-o',//图标样式class
+        iconCls: 'el-icon-s-goods',//图标样式class
         children: [
             { path: '/cargo', component: cargo, name: '商品管理' }
         ]
@@ -84,7 +48,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '图片管理',
-        iconCls: 'fa fa-id-card-o',//图标样式class
+        iconCls: 'el-icon-picture',//图标样式class
         children: [
             { path: '/banner', component: banner, name: '首页轮播图' }
         ]
@@ -93,7 +57,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '订单管理',
-        iconCls: 'fa fa-id-card-o',//图标样式class
+        iconCls: 'el-icon-s-order',//图标样式class
         children: [
             { path: '/order', component: order, name: '订单管理' }
         ]
@@ -102,7 +66,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '规格管理',
-        iconCls: 'fa fa-id-card-o',//图标样式class
+        iconCls: 'el-icon-s-grid',//图标样式class
         children: [
             { path: '/standard', component: standard, name: '规格管理' }
         ]

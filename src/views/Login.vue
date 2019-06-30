@@ -71,8 +71,7 @@ export default {
             JSON.stringify({
               id: 1,
               name: "admin",
-              avatar:
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1560626129806&di=ff79239365e7f9daef28072718ee8e83&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F01%2F30%2F26%2F24573b0a9382ae2.jpg"
+              avatar:"http://hbimg.b0.upaiyun.com/69ad7a731f43d4b8729f1a2fbe65c43801ca0f033250-EV1vMf_fw658"
             })
           );
           this.$router.push({ path: "/banner" });

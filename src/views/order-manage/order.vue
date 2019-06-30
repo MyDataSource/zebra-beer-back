@@ -44,10 +44,20 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-pagination
+      <!-- <el-pagination
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
         :page-size="10"
+        :total="total"
+        style="float:right;"
+      ></el-pagination>-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="10"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         style="float:right;"
       ></el-pagination>
@@ -73,7 +83,7 @@
         </el-form-item>
         <el-form-item label="货物清单">
           <div v-for="(items,index) in viewItem.cargoList" v-bind:key="index" class="cargoList">
-            <img :src="imgBaseUrl+items.img" alt class="goodsImg">
+            <img :src="imgBaseUrl+items.img" alt class="goodsImg" />
             <div class="msgCover">
               <div class="msg1">
                 <span>{{items.cargoName}}</span>
@@ -127,6 +137,7 @@ export default {
       orders: [],
       total: 0,
       page: 1,
+      size: 10,
       imgBaseUrl: "/BeerApp/oss/getFile?id=",
       listLoading: false,
       dialogVisible: false,
@@ -147,11 +158,15 @@ export default {
       this.page = val;
       this.getOrders();
     },
+    handleSizeChange(val) {
+      this.size = val;
+      this.getOrders();
+    },
     getOrders() {
       let para = {
         pageItem: {
           page: this.page,
-          size: 10
+          size: this.size
         },
         id: this.filters.orderid,
         state: this.filters.state
