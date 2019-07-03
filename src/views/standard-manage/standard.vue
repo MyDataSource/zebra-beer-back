@@ -84,10 +84,10 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="单价">
-          <el-input-number v-model="editForm.price" :min="0"></el-input-number>
+          <el-input-number v-model="editForm.price" :precision="2" :step="0.01" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="库存">
-          <el-input-number v-model="editForm.quantity" :min="0"></el-input-number>
+          <el-input-number v-model="editForm.quantity" :precision="0" :step="1" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="描述">
           <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="editForm.description"></el-input>
@@ -132,10 +132,10 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="单价">
-          <el-input-number v-model="addForm.price" :min="0"></el-input-number>
+          <el-input-number v-model="addForm.price" :precision="2" :step="0.01" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="库存">
-          <el-input-number v-model="addForm.quantity" :min="0"></el-input-number>
+          <el-input-number v-model="addForm.quantity" :precision="0" :step="1" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="描述">
           <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="addForm.description"></el-input>

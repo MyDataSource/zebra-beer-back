@@ -109,10 +109,10 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="现价" prop="nowPrice">
-          <el-input-number v-model="editForm.nowPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
+          <el-input-number v-model="editForm.nowPrice" :precision="2" :step="0.01" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="原价" prop="oldPrice">
-          <el-input-number v-model="editForm.oldPrice" :precision="2" :step="0.1" :min="0"></el-input-number>
+          <el-input-number v-model="editForm.oldPrice" :precision="2" :step="0.01" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="销量" prop="sellQuantity">
           <el-input-number v-model="editForm.sellQuantity" :precision="0" :step="1" :min="0"></el-input-number>
@@ -190,10 +190,11 @@
       <el-carousel :autoplay="false" type="card" :height="height">
         <el-carousel-item v-for="(item,index) in dialogImageUrl" :key="index">
           <!-- <img width="100%;" :src="imgBaseUrl+item" mode="widthFix" /> -->
-          <el-image :src="imgBaseUrl+item">
+          <el-image :src="imgBaseUrl+item" @load="onImgLoad(this)">
             <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
+              <!-- 加载中
+              <span class="dot">...</span> -->
+              <i class="el-icon-picture-outline"></i>
             </div>
           </el-image>
         </el-carousel-item>
@@ -279,6 +280,9 @@ export default {
     };
   },
   methods: {
+    onImgLoad(e){
+      console.log('图片加载成功',e);
+    },
     handleLink(id) {
       console.log(id);
       localStorage.setItem("cargoId", id);
