@@ -15,22 +15,42 @@
       <el-table-column prop="cargoName" label="商品名称" sortable></el-table-column>
       <el-table-column label="商品图片">
         <template slot-scope="scope">
-          <img
+          <!-- <img
             :src="scope.row.cargoImg==null?'':imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
             alt
             class="image"
             @click="preview(scope.row.cargoImg)"
+          >-->
+          <el-image
+            :src="scope.row.cargoImg==null?'':imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
+            @click="preview(scope.row.cargoImg)"
+            class="image"
           >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="详情图片">
         <template slot-scope="scope">
-          <img
+          <el-image
+            :src="scope.row.decripImg==null?'':imgBaseUrl+(scope.row.decripImg).split(',')[0]"
+            @click="preview(scope.row.decripImg)"
+            class="image"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+          </el-image>
+          <!-- <img
             :src="scope.row.decripImg==null?'':imgBaseUrl+(scope.row.decripImg).split(',')[0]"
             alt
             class="image"
             @click="preview(scope.row.decripImg)"
-          >
+          />-->
         </template>
       </el-table-column>
       <el-table-column prop="oldPrice" label="原价" sortable></el-table-column>
@@ -167,15 +187,15 @@
 
     <!-- 商品图片轮播 -->
     <el-dialog :visible.sync="dialogVisible" class="bannerCover">
-      <el-carousel :autoplay="false" style="height:auto">
+      <el-carousel :autoplay="false" type="card" :height="height">
         <el-carousel-item v-for="(item,index) in dialogImageUrl" :key="index">
-          <img width="100%" :src="imgBaseUrl+item" mode="widthFix">
+          <img width="100%;" :src="imgBaseUrl+item" mode="widthFix" />
         </el-carousel-item>
       </el-carousel>
     </el-dialog>
     <!-- 上传图片预览 -->
     <el-dialog :visible.sync="visible">
-      <img width="100%" :src="imageUrl" alt>
+      <img width="100%" :src="imageUrl" alt />
     </el-dialog>
   </section>
 </template>
@@ -193,7 +213,7 @@ import {
 export default {
   data() {
     return {
-      baseUrl: baseUrl+"/BeerApp/oss/uploadFile",
+      baseUrl: baseUrl + "/BeerApp/oss/uploadFile",
       isMultiple: true,
       fileList2: [],
       fileList1: [],
@@ -204,6 +224,7 @@ export default {
       imgBaseUrl: "/BeerApp/oss/getFile?id=",
       cargoList: [],
       listLoading: false,
+      height: "800px",
 
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
@@ -275,8 +296,14 @@ export default {
         id: row.id,
         cargoNo: row.cargoNo,
         cargoName: row.cargoName,
-        cargoImg: (row.cargoImg == null || row.cargoImg == "") ? [] : row.cargoImg.split(","),
-        decripImg: (row.decripImg == null || row.decripImg == "") ? [] : row.decripImg.split(","),
+        cargoImg:
+          row.cargoImg == null || row.cargoImg == ""
+            ? []
+            : row.cargoImg.split(","),
+        decripImg:
+          row.decripImg == null || row.decripImg == ""
+            ? []
+            : row.decripImg.split(","),
         description: row.description,
         nowPrice: row.nowPrice,
         oldPrice: row.oldPrice,

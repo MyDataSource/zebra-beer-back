@@ -25,7 +25,13 @@
         <el-table-column prop="serial" label="排序编号" min-width="100"></el-table-column>
         <el-table-column label="图片" min-width="200">
           <template slot-scope="scope">
-            <img :src="imgBaseUrl+scope.row.img" class="image">
+            <!-- <img :src="imgBaseUrl+scope.row.img" class="image" @click="preView(imgBaseUrl+scope.row.img)"> -->
+            <el-image :src="imgBaseUrl+scope.row.img" @click="preView(imgBaseUrl+scope.row.img)">
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column prop="url" label="跳转链接" min-width="100"></el-table-column>
@@ -66,7 +72,7 @@
           <el-input v-model="addForm.url" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="img">
-          <input type="hidden" v-model="addForm.img">
+          <input type="hidden" v-model="addForm.img" />
           <el-upload
             action="/BeerApp/oss/uploadFile"
             list-type="picture-card"
@@ -96,7 +102,7 @@
           <el-input v-model="editForm.url" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="img">
-          <input type="hidden" v-model="editForm.img">
+          <input type="hidden" v-model="editForm.img" />
           <el-upload
             action="/BeerApp/oss/uploadFile"
             list-type="picture-card"
@@ -121,7 +127,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt>
+      <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
   </section>
 </template>
@@ -385,6 +391,10 @@ export default {
     handlePictureCardPreview(file) {
       console.log("预览", file);
       this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    preView(url) {
+      this.dialogImageUrl = url;
       this.dialogVisible = true;
     }
   },

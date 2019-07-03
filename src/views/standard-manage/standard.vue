@@ -20,12 +20,22 @@
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column label="规格图片">
         <template slot-scope="scope">
-          <img
+          <!-- <img
             :src="scope.row.img==null?'':imgBaseUrl+(scope.row.img)"
             alt
             class="image"
             @click="preview(scope.row.img)"
+          >-->
+          <el-image
+            :src="scope.row.img==null?'':imgBaseUrl+(scope.row.img)"
+            @click="preview(scope.row.img)"
+            class="image"
           >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="规格名称" sortable></el-table-column>
@@ -56,7 +66,7 @@
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="规格图片" prop="img">
-          <input type="hidden" v-model="editForm.img">
+          <input type="hidden" v-model="editForm.img" />
           <el-upload
             action="/BeerApp/oss/uploadFile"
             list-type="picture-card"
@@ -105,7 +115,7 @@
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="规格图片" prop="img">
-          <input type="hidden" v-model="addForm.img">
+          <input type="hidden" v-model="addForm.img" />
           <el-upload
             action="/BeerApp/oss/uploadFile"
             list-type="picture-card"
@@ -137,7 +147,7 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt>
+      <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
   </section>
 </template>

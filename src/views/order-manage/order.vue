@@ -28,7 +28,7 @@
       <el-table-column prop="id" label="订单号" sortable></el-table-column>
       <el-table-column prop="price" label="支付金额" sortable></el-table-column>
       <el-table-column prop="createTime" label="创建时间" sortable></el-table-column>
-       <el-table-column prop="stateName" label="订单状态" sortable></el-table-column>
+      <el-table-column prop="stateName" label="订单状态" sortable></el-table-column>
       <!-- <el-table-column prop="message" label="买家留言"></el-table-column> -->
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
@@ -77,7 +77,17 @@
         </el-form-item>
         <el-form-item label="货物清单">
           <div v-for="(items,index) in viewItem.cargoList" v-bind:key="index" class="cargoList">
-            <img :src="imgBaseUrl+items.img" alt class="goodsImg" />
+            <!-- <img :src="imgBaseUrl+items.img" alt class="goodsImg" /> -->
+            <el-image
+              :src="imgBaseUrl+items.img"
+              @click="preview(imgBaseUrl+items.img)"
+              class="goodsImg"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+            </el-image>
             <div class="msgCover">
               <div>{{items.cargoName}}</div>
               <div style="color:#ccc">包装:{{items.specName}}</div>
@@ -89,6 +99,10 @@
           </div>
         </el-form-item>
       </el-form>
+    </el-dialog>
+
+    <el-dialog :visible.sync="visible">
+      <img width="100%" :src="imageUrl" alt />
     </el-dialog>
   </section>
 </template>
@@ -143,10 +157,18 @@ export default {
         // price: "",
         // state: "",
         // userId: ""
-      }
+      },
+      imageUrl: "",
+      visible: false
     };
   },
   methods: {
+    //预览图
+    preview(img) {
+      console.log(img);
+      this.imageUrl = img;
+      this.visible = true;
+    },
     handleCurrentChange(val) {
       this.page = val;
       this.getOrders();
@@ -167,7 +189,7 @@ export default {
       this.listLoading = true;
       getOrderList(para).then(res => {
         this.total = res.data.total;
-        for(let i of res.data.list){
+        for (let i of res.data.list) {
           i.stateName = this.map.get(i.state);
         }
         this.orders = res.data.list;

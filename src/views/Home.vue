@@ -133,7 +133,7 @@ export default {
   data() {
     return {
       msg: false,
-      sysName: "生啤后台管理系统",
+      sysName: "笙啤后台管理系统",
       collapsed: false,
       sysUserName: "",
       sysUserAvatar: "",
