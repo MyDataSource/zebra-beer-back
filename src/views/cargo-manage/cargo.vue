@@ -189,7 +189,13 @@
     <el-dialog :visible.sync="dialogVisible" class="bannerCover">
       <el-carousel :autoplay="false" type="card" :height="height">
         <el-carousel-item v-for="(item,index) in dialogImageUrl" :key="index">
-          <img width="100%;" :src="imgBaseUrl+item" mode="widthFix" />
+          <!-- <img width="100%;" :src="imgBaseUrl+item" mode="widthFix" /> -->
+          <el-image :src="imgBaseUrl+item">
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+          </el-image>
         </el-carousel-item>
       </el-carousel>
     </el-dialog>
