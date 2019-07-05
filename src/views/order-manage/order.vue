@@ -70,7 +70,7 @@
           <span>{{viewItem.createTime}}</span>
         </el-form-item>
         <el-form-item label="收货地址">
-          <span>{{viewItem.addressId}}</span>
+          <span>{{viewItem.address}}</span>
         </el-form-item>
         <el-form-item label="买家留言">
           <span>{{viewItem.message}}</span>
@@ -118,10 +118,19 @@ export default {
         orderid: "",
         state: ""
       },
+      // 0已取消，已完成5,-1已删除
       options: [
         {
-          value: 0,
+          value: null,
           label: "全部"
+        },
+        {
+          value: -1,
+          label: "已删除"
+        },
+        {
+          value: 0,
+          label: "已取消"
         },
         {
           value: 1,
@@ -138,6 +147,10 @@ export default {
         {
           value: 4,
           label: "待评价"
+        },
+        {
+          value: 5,
+          label: "已完成"
         }
       ],
       map: new Map(),
