@@ -20,14 +20,16 @@ axios.interceptors.request.use(
 // respone拦截器
 axios.interceptors.response.use(
     response => {
+        // console.log(response);
         const resp = response.data
         if (response.status === 200) {
             return resp
+            // return Promise.resolve(resp)
         }
         return resp
     },
     error => {
-        console.log(error);
+        // console.log(error);
         Message.error({
             message: '链接异常'
         })

@@ -1,5 +1,6 @@
 <template>
-  <el-row class="container">
+  <el-row class="container" id="newOrder">
+    <div class="add_blank">您有新的订单,请注意查看</div>
     <el-col :span="24" class="header">
       <el-col
         :span="10"
@@ -18,10 +19,9 @@
           v-if="msg"
           @click="bindMsg"
         ></i>
-        <!-- <audio id='audioPlay' src='/admin/images/30.wav' hidden='true'> -->
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner">
-            <img :src="this.sysUserAvatar">
+            <img :src="this.sysUserAvatar" />
             {{sysUserName}}
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -66,7 +66,11 @@
         </el-menu>
         <!--导航菜单-折叠后-->
         <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-          <li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
+          <li
+            v-for="(item,index) in $router.options.routes"
+            v-if="!item.hidden"
+            class="el-submenu item"
+          >
             <template v-if="!item.leaf">
               <div
                 class="el-submenu__title"
@@ -132,7 +136,7 @@ import { getPort } from "../api/api";
 export default {
   data() {
     return {
-      msg: false,
+      msg: true,
       sysName: "笙啤后台管理系统",
       collapsed: false,
       sysUserName: "",
@@ -183,8 +187,40 @@ export default {
     },
     //点击消息
     bindMsg() {
+      // var audio = new Audio("../assets/audio/newOrder.mp3"); //
+      // audio.play(); //播放
+      this.playSound();
       this.msg = false;
       this.$router.push({ path: "/order" });
+    },
+    //播放
+    playSound() {
+      var borswer = window.navigator.userAgent.toLowerCase();
+      if (borswer.indexOf("ie") >= 0) {
+        //IE内核浏览器
+        var strEmbed =
+          '<embed name="embedPlay" src="/assets/audio/newOrder.mp3" autostart="true" hidden="true" loop="false"></embed>';
+        if ($("body").find("embed").length <= 0) $("body").append(strEmbed);
+        // document.getElementById('newOrder').appendChild(strEmbed);
+        var embed = document.embedPlay;
+
+        //浏览器不支持 audion，则使用 embed 播放
+        embed.volume = 100;
+        //embed.play();这个不需要
+      } else {
+        //非IE内核浏览器
+        var strAudio =
+          "<audio id='audioPlay' src='/assets/audio/newOrder.mp3' hidden='true'>";
+
+        if ($("#audioPlay").length <= 0) {
+          $("body").append(strAudio);
+        }
+        // console.log(document.getElementById('newOrder'))
+        var audio = document.getElementById("audioPlay");
+
+        //浏览器支持 audio
+        audio.play();
+      }
     }
   },
   mounted() {
@@ -249,7 +285,17 @@ export default {
 
 <style scoped lang="scss">
 @import "~scss_vars";
-
+.add_blank {
+  position: absolute;
+  left: 14%;
+  width: 34%;
+  font-size: 32px;
+  height: 66px;
+  text-align: center;
+  background: #ff9966;
+  line-height: 67px;
+  display: none;
+}
 .container {
   position: absolute;
   top: 0px;
