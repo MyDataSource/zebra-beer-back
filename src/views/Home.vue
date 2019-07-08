@@ -1,6 +1,5 @@
 <template>
   <el-row class="container" id="newOrder">
-    <div class="add_blank">您有新的订单,请注意查看</div>
     <el-col :span="24" class="header">
       <el-col
         :span="10"
@@ -27,7 +26,7 @@
           <el-dropdown-menu slot="dropdown">
             <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
             <!-- <el-dropdown-item>设置</el-dropdown-item> -->
-            <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -38,9 +37,6 @@
         <el-menu
           :default-active="$route.path"
           class="el-menu-vertical-demo uncollapsed"
-          @open="handleopen"
-          @close="handleclose"
-          @select="handleselect"
           unique-opened
           router
           v-show="!collapsed"
@@ -58,7 +54,7 @@
                 v-if="!child.hidden"
               >{{child.name}}</el-menu-item>
             </el-submenu>
-            <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path">
+            <el-menu-item v-if="item.leaf && item.children.length>0" :index="item.children[0].path">
               <i :class="item.iconCls"></i>
               {{item.children[0].name}}
             </el-menu-item>
@@ -154,15 +150,6 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      console.log("submit!");
-    },
-    handleopen() {
-      //console.log('handleopen');
-    },
-    handleclose() {
-      //console.log('handleclose');
-    },
     handleselect: function(a, b) {},
     //退出登录
     logout: function() {
@@ -187,19 +174,27 @@ export default {
     },
     //点击消息
     bindMsg() {
-      // var audio = new Audio("../assets/audio/newOrder.mp3"); //
-      // audio.play(); //播放
+      this.$notify({
+        title: "订单提示！",
+        offset: 100,
+        dangerouslyUseHTMLString: true,
+        type: "warning",
+        message: `您有新的订单,请<el-button type="primary">及时处理</el-button>~~`,
+        duration: 0
+      });
       this.playSound();
-      this.msg = false;
-      this.$router.push({ path: "/order" });
+      // this.msg = false;
+      // this.$router.push({ path: "/order" });
     },
     //播放
     playSound() {
+      let musicUrl =
+        "http://apollo-wms.oss-cn-zhangjiakou.aliyuncs.com/20190708124824.mp3?Expires=3139361304&OSSAccessKeyId=LTAIAhZv9N2cPpLq&Signature=g4hxwvnLn%2F4AzS7E6zLnTcouA0c%3D";
       var borswer = window.navigator.userAgent.toLowerCase();
+      console.log(borswer);
       if (borswer.indexOf("ie") >= 0) {
         //IE内核浏览器
-        var strEmbed =
-          '<embed name="embedPlay" src="/assets/audio/newOrder.mp3" autostart="true" hidden="true" loop="false"></embed>';
+        var strEmbed = `<embed name="embedPlay" src='${musicUrl}' autostart="true" hidden="true" loop="false"></embed>`;
         if ($("body").find("embed").length <= 0) $("body").append(strEmbed);
         // document.getElementById('newOrder').appendChild(strEmbed);
         var embed = document.embedPlay;
@@ -209,37 +204,29 @@ export default {
         //embed.play();这个不需要
       } else {
         //非IE内核浏览器
-        var strAudio =
-          "<audio id='audioPlay' src='/assets/audio/newOrder.mp3' hidden='true'>";
+        var strAudio = `<audio id='audioPlay' src='${musicUrl}' hidden='true'>`; // hidden='true'
 
         if ($("#audioPlay").length <= 0) {
           $("body").append(strAudio);
         }
         // console.log(document.getElementById('newOrder'))
         var audio = document.getElementById("audioPlay");
-
         //浏览器支持 audio
         audio.play();
       }
-    }
-  },
-  mounted() {
-    var user = sessionStorage.getItem("user");
-    if (user) {
-      user = JSON.parse(user);
-      this.sysUserName = user.name || "";
-      this.sysUserAvatar = user.avatar || "";
-      //获取ip端口
+    },
+    //ws服务器
+    socketServer() {
       getPort().then(res => {
         console.log(res.data);
-        let url = "ws://" + res.data + "/BeerManage/socketServer/ddddddddd";
+        let url = "ws://" + res.data + "/BeerManage/socketServer/ddd";
         const ws = new WebSocket(url);
         var that = this;
-        console.log(ws);
+        // console.log(ws);
         ws.onopen = function() {
           console.log("连接websocket");
           that.$notify({
-            title: "建立连接",
+            title: "成功",
             message: "订单消息推送服务连接成功！",
             type: "success",
             duration: 2000
@@ -279,23 +266,22 @@ export default {
         };
       });
     }
+  },
+  mounted() {
+    var user = sessionStorage.getItem("user");
+    if (user) {
+      user = JSON.parse(user);
+      this.sysUserName = user.name || "";
+      this.sysUserAvatar = user.avatar || "";
+      //获取ip端口
+      this.socketServer();
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
 @import "~scss_vars";
-.add_blank {
-  position: absolute;
-  left: 14%;
-  width: 34%;
-  font-size: 32px;
-  height: 66px;
-  text-align: center;
-  background: #ff9966;
-  line-height: 67px;
-  display: none;
-}
 .container {
   position: absolute;
   top: 0px;

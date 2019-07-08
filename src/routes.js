@@ -38,7 +38,7 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '商品管理',
+        name: '商品',
         iconCls: 'el-icon-s-goods',//图标样式class
         children: [
             { path: '/cargo', component: cargo, name: '商品管理' }
@@ -47,16 +47,16 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '图片管理',
+        name: '图片',
         iconCls: 'el-icon-picture',//图标样式class
         children: [
-            { path: '/banner', component: banner, name: '首页轮播图' }
+            { path: '/banner', component: banner, name: '轮播图管理' }
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '订单管理',
+        name: '订单',
         iconCls: 'el-icon-s-order',//图标样式class
         children: [
             { path: '/order', component: order, name: '订单管理' }
@@ -65,7 +65,7 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '规格管理',
+        name: '规格',
         iconCls: 'el-icon-s-grid',//图标样式class
         children: [
             { path: '/standard', component: standard, name: '规格管理' }
