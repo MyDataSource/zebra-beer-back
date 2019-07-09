@@ -1,6 +1,6 @@
 import axios from './request';
 
-let base = 'http://localhost:16443';//http://localhost:8080
+let base = 'http://localhost:8080';//http://localhost:8080
 export const baseUrl = base;
 
 export const getPort = params => { return axios.get(`${base}/BeerManage/message/getIp`, { params: params }); };
@@ -31,6 +31,8 @@ export const getOrderList = params => { return axios.post(`${base}/BeerApp/trade
 
 export const updateOrderList = params => { return axios.post(`${base}/BeerApp/trade/update.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//更新订单
 
+export const refund = params => { return axios.post(`${base}/BeerApp/wx/refund.do?out_trade_no=${params["tradeId"]}&total_fee=${params["total_fee"]}`, { params: params }); };//确认退款
+
 export const updateOrderManage = params => { return axios.get(`${base}/BeerManage/order/update.do`, { params: params }); };//更新订单
 
-// export const getAddressById = params => { return axios.get(`${base}/BeerManage/addr/get.do`, { params: params }); };//获取收货地址
+export const cancelOrder = params => { return axios.post(`${base}/BeerApp/trade/cancel.do?id=${params["tradeId"]}`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//取消订单

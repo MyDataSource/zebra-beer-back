@@ -26,10 +26,10 @@
     <el-table :data="orders" v-loading="listLoading" style="width: 100%;">
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="id" label="订单号" sortable></el-table-column>
-      <el-table-column prop="price" label="支付金额" sortable></el-table-column>
+      <el-table-column prop="price" label="支付金额(元)" sortable></el-table-column>
       <el-table-column prop="createTime" label="创建时间" sortable></el-table-column>
       <el-table-column prop="stateName" label="订单状态" sortable></el-table-column>
-      <!-- <el-table-column prop="message" label="买家留言"></el-table-column> -->
+      <el-table-column prop="typeName" label="收货方式" sortable></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleView(scope.$index, scope.row)">查看</el-button>
@@ -39,6 +39,12 @@
             @click="handleDeliver(scope.$index, scope.row)"
             v-if="scope.row.state == 2"
           >发货</el-button>
+          <el-button
+            size="small"
+            type="warning"
+            @click="handleRefund(scope.$index, scope.row)"
+            v-if="scope.row.state == 0"
+          >退款</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,15 +70,18 @@
           <span>{{viewItem.id}}</span>
         </el-form-item>
         <el-form-item label="支付金额">
-          <span>{{viewItem.price}}</span>
+          <span>{{viewItem.price}}(元)</span>
         </el-form-item>
         <el-form-item label="下单时间">
           <span>{{viewItem.createTime}}</span>
         </el-form-item>
-        <el-form-item label="收货地址">
+        <el-form-item label="收货地址" v-if="viewItem.type==1">
           <span>{{viewItem.address}}</span>
         </el-form-item>
-        <el-form-item label="买家留言">
+        <el-form-item label="收货方式">
+          <span>{{viewItem.type == 1 ? '配送':'自提'}}</span>
+        </el-form-item>
+        <el-form-item label="买家留言" v-if="viewItem.type==1">
           <span>{{viewItem.message}}</span>
         </el-form-item>
         <el-form-item label="货物清单">
@@ -109,7 +118,7 @@
 
 <script>
 import util from "../../common/js/util";
-import { getOrderList, updateOrderManage } from "../../api/api";
+import { getOrderList, updateOrderManage, refund ,cancelOrder} from "../../api/api";
 
 export default {
   data() {
@@ -118,19 +127,22 @@ export default {
         orderid: "",
         state: ""
       },
-      // 0已取消，已完成5,-1已删除
       options: [
         {
           value: null,
           label: "全部"
         },
         {
-          value: -1,
+          value: -2,
           label: "已删除"
         },
         {
-          value: 0,
+          value: -1,
           label: "已取消"
+        },
+        {
+          value: 0,
+          label: "退款中"
         },
         {
           value: 1,
@@ -161,16 +173,7 @@ export default {
       imgBaseUrl: "/BeerApp/oss/getFile?id=",
       listLoading: false,
       dialogVisible: false,
-      viewItem: {
-        // addressId: "",
-        // cargoList: [],
-        // createTime: "",
-        // id: "",
-        // message: "",
-        // price: "",
-        // state: "",
-        // userId: ""
-      },
+      viewItem: {},
       imageUrl: "",
       visible: false
     };
@@ -204,6 +207,7 @@ export default {
         this.total = res.data.total;
         for (let i of res.data.list) {
           i.stateName = this.map.get(i.state);
+          i.typeName = i.type == 1 ? "配送" : "自提";
         }
         this.orders = res.data.list;
         this.listLoading = false;
@@ -217,6 +221,17 @@ export default {
         updateOrderManage({ tradeId: tradeId }).then(res => {
           console.log(res);
           this.getOrders();
+        });
+      });
+    },
+    handleRefund(index, row) {
+      console.log("退款", row);
+      this.$confirm("确认退款吗？", "提示", {}).then(() => {
+        refund({ tradeId: row.id, total_fee: row.price * 100 }).then(res => {
+          cancelOrder({ tradeId: tradeId }).then(resp => {
+            console.log(resp);
+            this.getOrders();
+          });
         });
       });
     },

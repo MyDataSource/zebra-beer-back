@@ -132,7 +132,8 @@ import { getPort } from "../api/api";
 export default {
   data() {
     return {
-      msg: true,
+      msg: false,
+      showOrder: true,
       sysName: "笙啤后台管理系统",
       collapsed: false,
       sysUserName: "",
@@ -174,17 +175,9 @@ export default {
     },
     //点击消息
     bindMsg() {
-      this.$notify({
-        title: "订单提示！",
-        offset: 100,
-        dangerouslyUseHTMLString: true,
-        type: "warning",
-        message: `您有新的订单,请<el-button type="primary">及时处理</el-button>~~`,
-        duration: 0
-      });
-      this.playSound();
-      // this.msg = false;
-      // this.$router.push({ path: "/order" });
+      this.msg = false;
+      this.showOrder = false;
+      this.$router.push({ path: "/order" });
     },
     //播放
     playSound() {
@@ -253,6 +246,14 @@ export default {
               });
           } else {
             that.msg = true;
+            that.showOrder = true;
+            that.$notify({
+              title: "订单提示！",
+              offset: 100,
+              type: "warning",
+              message: `您有新的订单,请及时处理`
+            });
+            that.playSound();
           }
         };
         ws.onclose = function() {
