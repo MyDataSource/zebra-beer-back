@@ -227,7 +227,7 @@ export default {
         };
         // 接收消息时触发
         ws.onmessage = function(response) {
-          console.log(response.data);
+          console.log(response);
           if (response.data.code == 1000) {
             sessionStorage.removeItem("user");
             //其他地方登录、

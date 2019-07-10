@@ -75,6 +75,12 @@
         <el-form-item label="下单时间">
           <span>{{viewItem.createTime}}</span>
         </el-form-item>
+        <el-form-item label="收货人" v-if="viewItem.type==1">
+          <span>{{viewItem.receiver}}</span>
+        </el-form-item>
+        <el-form-item label="联系电话" v-if="viewItem.type==1">
+          <span>{{viewItem.phone}}</span>
+        </el-form-item>
         <el-form-item label="收货地址" v-if="viewItem.type==1">
           <span>{{viewItem.address}}</span>
         </el-form-item>
@@ -118,7 +124,12 @@
 
 <script>
 import util from "../../common/js/util";
-import { getOrderList, updateOrderManage, refund ,cancelOrder} from "../../api/api";
+import {
+  getOrderList,
+  updateOrderManage,
+  refund,
+  cancelOrder
+} from "../../api/api";
 
 export default {
   data() {
@@ -228,7 +239,7 @@ export default {
       console.log("退款", row);
       this.$confirm("确认退款吗？", "提示", {}).then(() => {
         refund({ tradeId: row.id, total_fee: row.price * 100 }).then(res => {
-          cancelOrder({ tradeId: tradeId }).then(resp => {
+          cancelOrder({ tradeId: row.id }).then(resp => {
             console.log(resp);
             this.getOrders();
           });

@@ -35,4 +35,10 @@ export const refund = params => { return axios.post(`${base}/BeerApp/wx/refund.d
 
 export const updateOrderManage = params => { return axios.get(`${base}/BeerManage/order/update.do`, { params: params }); };//更新订单
 
-export const cancelOrder = params => { return axios.post(`${base}/BeerApp/trade/cancel.do?id=${params["tradeId"]}`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//取消订单
+export const cancelOrder = params => { return axios.post(`${base}/BeerApp/trade/cancel.do?id=${params["tradeId"]}`, { params: params }, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//取消订单
+
+export const getCargoByTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/getList`, { params: params }, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取商品分类列表
+
+export const addCargoByTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/add.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//新增商品分类列表
+
+export const updateCargoTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/update.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//更新商品分类列表

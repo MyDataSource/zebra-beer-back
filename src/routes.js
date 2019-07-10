@@ -8,6 +8,7 @@ import Home from './views/Home.vue'
 
 import banner from './views/image-manage/banner.vue'
 import cargo from './views/cargo-manage/cargo.vue'
+import cargoType from './views/cargo-manage/cargoType.vue'
 import order from './views/order-manage/order.vue'
 import standard from './views/standard-manage/standard.vue'
 let routes = [
@@ -41,7 +42,8 @@ let routes = [
         name: '商品',
         iconCls: 'el-icon-s-goods',//图标样式class
         children: [
-            { path: '/cargo', component: cargo, name: '商品管理' }
+            { path: '/cargo', component: cargo, name: '商品管理' },
+            { path: '/cargoType', component: cargoType, name: '商品分类' }
         ]
     },
     {

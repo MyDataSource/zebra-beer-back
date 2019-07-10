@@ -15,12 +15,6 @@
       <el-table-column prop="cargoName" label="商品名称" sortable></el-table-column>
       <el-table-column label="商品图片">
         <template slot-scope="scope">
-          <!-- <img
-            :src="scope.row.cargoImg==null?'':imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
-            alt
-            class="image"
-            @click="preview(scope.row.cargoImg)"
-          >-->
           <el-image
             :src="scope.row.cargoImg==null?'':imgBaseUrl+(scope.row.cargoImg).split(',')[0]"
             @click="preview(scope.row.cargoImg)"
@@ -45,12 +39,6 @@
               <span class="dot">...</span>
             </div>
           </el-image>
-          <!-- <img
-            :src="scope.row.decripImg==null?'':imgBaseUrl+(scope.row.decripImg).split(',')[0]"
-            alt
-            class="image"
-            @click="preview(scope.row.decripImg)"
-          />-->
         </template>
       </el-table-column>
       <el-table-column prop="oldPrice" label="原价" sortable></el-table-column>
@@ -193,7 +181,7 @@
           <el-image :src="imgBaseUrl+item" @load="onImgLoad(this)">
             <div slot="placeholder" class="image-slot">
               <!-- 加载中
-              <span class="dot">...</span> -->
+              <span class="dot">...</span>-->
               <i class="el-icon-picture-outline"></i>
             </div>
           </el-image>
@@ -280,13 +268,12 @@ export default {
     };
   },
   methods: {
-    onImgLoad(e){
-      console.log('图片加载成功',e);
+    onImgLoad(e) {
+      console.log("图片加载成功", e);
     },
     handleLink(id) {
       console.log(id);
       localStorage.setItem("cargoId", id);
-
       this.$router.push({ path: "/standard" });
     },
     //获取列表
