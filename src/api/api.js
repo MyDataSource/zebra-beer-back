@@ -43,6 +43,10 @@ export const addCargoByTypeList = params => { return axios.post(`${base}/BeerApp
 
 export const updateCargoTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/update.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//更新商品分类列表
 
-export const getEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/get.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
+// export const getEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/get.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
 
-export const delEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/del.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
+// export const delEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/del.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
+
+export const getShopTime = params => { return axios.get(`${base}/BeerApp/shopTime/get.do`, { params: params }); };//获取营业时间
+
+export const updateShopTime = params => { return axios.post(`${base}/BeerApp/shopTime/update.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//更新营业时间

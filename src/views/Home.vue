@@ -1,137 +1,171 @@
 <template>
-  <el-row class="container" id="newOrder">
-    <el-col :span="24" class="header">
-      <el-col
-        :span="10"
-        class="logo"
-        :class="collapsed?'logo-collapse-width':'logo-width'"
-      >{{collapsed?'':sysName}}</el-col>
-      <el-col :span="8">
-        <div class="tools" @click.prevent="collapse">
-          <i class="fa fa-align-justify"></i>
-        </div>
+  <section>
+    <!-- 设置营业时间 -->
+    <el-dialog title="设置营业时间" :visible.sync="dialogFormVisible">
+      <el-form>
+        <el-form-item label="营业时间">
+          <el-time-picker
+            @focus="onFocus"
+            is-range
+            v-model="timeValue"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            placeholder="选择时间范围"
+            value-format="HH:mm"
+          ></el-time-picker>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="setTime">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-row class="container">
+      <el-col :span="24" class="header">
+        <el-col
+          :span="10"
+          class="logo"
+          :class="collapsed?'logo-collapse-width':'logo-width'"
+        >{{collapsed?'':sysName}}</el-col>
+        <el-col :span="8">
+          <div class="tools" @click.prevent="collapse">
+            <i class="fa fa-align-justify"></i>
+          </div>
+        </el-col>
+        <el-col :span="6" class="userinfo">
+          <i
+            class="el-icon-message-solid"
+            style="font-size:20px;margin-right:10px;"
+            v-if="msg"
+            @click="bindMsg"
+          ></i>
+          <el-dropdown trigger="hover">
+            <span class="el-dropdown-link userinfo-inner">
+              <img :src="this.sysUserAvatar" />
+              {{sysUserName}}
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
+              <el-dropdown-item @click.native="openDialog">营业时间</el-dropdown-item>
+              <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
       </el-col>
-      <el-col :span="6" class="userinfo">
-        <i
-          class="el-icon-message-solid"
-          style="font-size:20px;margin-right:10px;"
-          v-if="msg"
-          @click="bindMsg"
-        ></i>
-        <el-dropdown trigger="hover">
-          <span class="el-dropdown-link userinfo-inner">
-            <img :src="this.sysUserAvatar" />
-            {{sysUserName}}
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
-            <!-- <el-dropdown-item>设置</el-dropdown-item> -->
-            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-    </el-col>
-    <el-col :span="24" class="main">
-      <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
-        <!--导航菜单-->
-        <el-menu
-          :default-active="$route.path"
-          class="el-menu-vertical-demo uncollapsed"
-          unique-opened
-          router
-          v-show="!collapsed"
-        >
-          <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-            <el-submenu :index="index+''" v-if="!item.leaf">
-              <template slot="title">
-                <i :class="item.iconCls"></i>
-                {{item.name}}
-              </template>
-              <el-menu-item
-                v-for="child in item.children"
-                :index="child.path"
-                :key="child.path"
-                v-if="!child.hidden"
-              >{{child.name}}</el-menu-item>
-            </el-submenu>
-            <el-menu-item v-if="item.leaf && item.children.length>0" :index="item.children[0].path">
-              <i :class="item.iconCls"></i>
-              {{item.children[0].name}}
-            </el-menu-item>
-          </template>
-        </el-menu>
-        <!--导航菜单-折叠后-->
-        <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-          <li
-            v-for="(item,index) in $router.options.routes"
-            v-if="!item.hidden"
-            class="el-submenu item"
+      <el-col :span="24" class="main">
+        <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
+          <!--导航菜单-->
+          <el-menu
+            :default-active="$route.path"
+            class="el-menu-vertical-demo uncollapsed"
+            unique-opened
+            router
+            v-show="!collapsed"
           >
-            <template v-if="!item.leaf">
-              <div
-                class="el-submenu__title"
-                style="padding-left: 20px;"
-                @mouseover="showMenu(index,true)"
-                @mouseout="showMenu(index,false)"
+            <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+              <el-submenu :index="index+''" v-if="!item.leaf">
+                <template slot="title">
+                  <i :class="item.iconCls"></i>
+                  {{item.name}}
+                </template>
+                <el-menu-item
+                  v-for="child in item.children"
+                  :index="child.path"
+                  :key="child.path"
+                  v-if="!child.hidden"
+                >{{child.name}}</el-menu-item>
+              </el-submenu>
+              <el-menu-item
+                v-if="item.leaf && item.children.length>0"
+                :index="item.children[0].path"
               >
                 <i :class="item.iconCls"></i>
-              </div>
-              <ul
-                class="el-menu submenu"
-                :class="'submenu-hook-'+index"
-                @mouseover="showMenu(index,true)"
-                @mouseout="showMenu(index,false)"
-              >
-                <li
-                  v-for="child in item.children"
-                  v-if="!child.hidden"
-                  :key="child.path"
-                  class="el-menu-item"
-                  style="padding-left: 40px;"
-                  :class="$route.path==child.path?'is-active':''"
-                  @click="$router.push(child.path)"
-                >{{child.name}}</li>
-              </ul>
+                {{item.children[0].name}}
+              </el-menu-item>
             </template>
-            <template v-else>
-              <li class="el-submenu">
+          </el-menu>
+          <!--导航菜单-折叠后-->
+          <ul
+            class="el-menu el-menu-vertical-demo collapsed"
+            v-show="collapsed"
+            ref="menuCollapsed"
+          >
+            <li
+              v-for="(item,index) in $router.options.routes"
+              v-if="!item.hidden"
+              class="el-submenu item"
+            >
+              <template v-if="!item.leaf">
                 <div
-                  class="el-submenu__title el-menu-item"
-                  style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"
-                  :class="$route.path==item.children[0].path?'is-active':''"
-                  @click="$router.push(item.children[0].path)"
+                  class="el-submenu__title"
+                  style="padding-left: 20px;"
+                  @mouseover="showMenu(index,true)"
+                  @mouseout="showMenu(index,false)"
                 >
                   <i :class="item.iconCls"></i>
                 </div>
-              </li>
-            </template>
-          </li>
-        </ul>
-      </aside>
-      <section class="content-container">
-        <div class="grid-content bg-purple-light">
-          <el-col :span="24" class="breadcrumb-container">
-            <strong class="title">{{$route.name}}</strong>
-            <el-breadcrumb separator="/" class="breadcrumb-inner">
-              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">{{ item.name }}</el-breadcrumb-item>
-            </el-breadcrumb>
-          </el-col>
-          <el-col :span="24" class="content-wrapper">
-            <transition name="fade" mode="out-in">
-              <router-view></router-view>
-            </transition>
-          </el-col>
-        </div>
-      </section>
-    </el-col>
-  </el-row>
+                <ul
+                  class="el-menu submenu"
+                  :class="'submenu-hook-'+index"
+                  @mouseover="showMenu(index,true)"
+                  @mouseout="showMenu(index,false)"
+                >
+                  <li
+                    v-for="child in item.children"
+                    v-if="!child.hidden"
+                    :key="child.path"
+                    class="el-menu-item"
+                    style="padding-left: 40px;"
+                    :class="$route.path==child.path?'is-active':''"
+                    @click="$router.push(child.path)"
+                  >{{child.name}}</li>
+                </ul>
+              </template>
+              <template v-else>
+                <li class="el-submenu">
+                  <div
+                    class="el-submenu__title el-menu-item"
+                    style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"
+                    :class="$route.path==item.children[0].path?'is-active':''"
+                    @click="$router.push(item.children[0].path)"
+                  >
+                    <i :class="item.iconCls"></i>
+                  </div>
+                </li>
+              </template>
+            </li>
+          </ul>
+        </aside>
+        <section class="content-container">
+          <div class="grid-content bg-purple-light">
+            <el-col :span="24" class="breadcrumb-container">
+              <strong class="title">{{$route.name}}</strong>
+              <el-breadcrumb separator="/" class="breadcrumb-inner">
+                <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">{{ item.name }}</el-breadcrumb-item>
+              </el-breadcrumb>
+            </el-col>
+            <el-col :span="24" class="content-wrapper">
+              <transition name="fade" mode="out-in">
+                <router-view></router-view>
+              </transition>
+            </el-col>
+          </div>
+        </section>
+      </el-col>
+    </el-row>
+  </section>
 </template>
 
 <script>
-import { getPort } from "../api/api";
+import { getPort, getShopTime, updateShopTime } from "../api/api";
 export default {
   data() {
     return {
+      timeValue: [new Date(0, 0, 0, 8, 40), new Date(0, 0, 0, 9, 40)],
+      dialogFormVisible: false,
+      shopTime: null,
       msg: false,
       showOrder: true,
       sysName: "笙啤后台管理系统",
@@ -147,7 +181,8 @@ export default {
         type: [],
         resource: "",
         desc: ""
-      }
+      },
+      isSet: false
     };
   },
   methods: {
@@ -189,7 +224,6 @@ export default {
         //IE内核浏览器
         var strEmbed = `<embed name="embedPlay" src='${musicUrl}' autostart="true" hidden="true" loop="false"></embed>`;
         if ($("body").find("embed").length <= 0) $("body").append(strEmbed);
-        // document.getElementById('newOrder').appendChild(strEmbed);
         var embed = document.embedPlay;
 
         //浏览器不支持 audion，则使用 embed 播放
@@ -202,7 +236,6 @@ export default {
         if ($("#audioPlay").length <= 0) {
           $("body").append(strAudio);
         }
-        // console.log(document.getElementById('newOrder'))
         var audio = document.getElementById("audioPlay");
         //浏览器支持 audio
         audio.play();
@@ -266,6 +299,48 @@ export default {
           });
         };
       });
+    },
+    //获取服务器时间
+    getSystemTime() {
+      getShopTime().then(res => {
+        console.log(res);
+        this.shopTime = JSON.parse(JSON.stringify(res.data));
+        let startTh = res.data.startTime.split(":")[0];
+        let startTm = res.data.startTime.split(":")[1];
+        let endTh = res.data.endTime.split(":")[0];
+        let endTm = res.data.endTime.split(":")[1];
+        this.timeValue = [
+          new Date(0, 0, 0, startTh, startTm),
+          new Date(0, 0, 0, endTh, endTm)
+        ];
+      });
+    },
+    openDialog(){
+      this.dialogFormVisible = true;
+      this.getSystemTime();
+    },
+    onFocus() {
+      this.isSet = true;
+    },
+    setTime: function() {
+      console.log(this.timeValue);
+      //判断当前时间是否有改动才提交
+      if (this.isSet == true) {
+        let data = {
+          endTime: this.timeValue[1],
+          id: this.shopTime.id,
+          startTime: this.timeValue[0]
+        };
+        updateShopTime(JSON.stringify(data)).then(res => {
+          console.log(res);
+          this.isSet = false;
+          this.dialogFormVisible = false;
+          this.$message({
+            message: "修改成功",
+            type: "success"
+          });
+        });
+      }
     }
   },
   mounted() {
@@ -276,6 +351,7 @@ export default {
       this.sysUserAvatar = user.avatar || "";
       //获取ip端口
       this.socketServer();
+      this.getSystemTime();
     }
   }
 };
