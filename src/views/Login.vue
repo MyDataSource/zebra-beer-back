@@ -74,7 +74,7 @@ export default {
               avatar:"http://hbimg.b0.upaiyun.com/69ad7a731f43d4b8729f1a2fbe65c43801ca0f033250-EV1vMf_fw658"
             })
           );
-          this.$router.push({ path: "/banner" });
+          this.$router.push({ path: "/order" });
           // requestLogin(loginParams).then(data => {
           //   this.logining = false;
           // let { msg, code, user } = data;

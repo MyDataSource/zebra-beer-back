@@ -11,6 +11,7 @@ import cargo from './views/cargo-manage/cargo.vue'
 import cargoType from './views/cargo-manage/cargoType.vue'
 import order from './views/order-manage/order.vue'
 import standard from './views/standard-manage/standard.vue'
+import evaluation from './views/evaluation-manage/evaluate.vue'
 let routes = [
     {
         path: '/login',
@@ -43,6 +44,7 @@ let routes = [
         iconCls: 'el-icon-s-goods',//图标样式class
         children: [
             { path: '/cargo', component: cargo, name: '商品管理' },
+            { path: '/standard', component: standard, name: '规格设置', hidden: true },
             { path: '/cargoType', component: cargoType, name: '商品分类' }
         ]
     },
@@ -64,14 +66,25 @@ let routes = [
             { path: '/order', component: order, name: '订单管理' }
         ]
     },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '规格',
+    //     iconCls: 'el-icon-s-grid',//图标样式class
+    //     children: [
+    //         { path: '/standard', component: standard, name: '规格管理' }
+    //     ],
+    //     hidden: true
+    // },
     {
         path: '/',
         component: Home,
-        name: '规格',
-        iconCls: 'el-icon-s-grid',//图标样式class
+        name: '评价',
+        iconCls: 'el-icon-s-comment',//图标样式class
         children: [
-            { path: '/standard', component: standard, name: '规格管理' }
-        ]
+            { path: '/evaluation', component: evaluation, name: '评价管理' }
+        ],
+        hidden:true
     },
     {
         path: '*',

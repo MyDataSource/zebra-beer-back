@@ -173,7 +173,7 @@ export default {
         },
         {
           value: 5,
-          label: "已完成"
+          label: "交易成功"
         }
       ],
       map: new Map(),
@@ -231,6 +231,10 @@ export default {
         console.log("发货", tradeId);
         updateOrderManage({ tradeId: tradeId }).then(res => {
           console.log(res);
+          this.$message({
+            message: "发货成功",
+            type: "success"
+          });
           this.getOrders();
         });
       });
@@ -241,6 +245,10 @@ export default {
         refund({ tradeId: row.id, total_fee: row.price * 100 }).then(res => {
           cancelOrder({ tradeId: row.id }).then(resp => {
             console.log(resp);
+            this.$message({
+              message: "退款成功",
+              type: "success"
+            });
             this.getOrders();
           });
         });

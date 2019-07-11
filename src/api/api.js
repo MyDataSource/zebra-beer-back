@@ -42,3 +42,7 @@ export const getCargoByTypeList = params => { return axios.post(`${base}/BeerApp
 export const addCargoByTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/add.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//新增商品分类列表
 
 export const updateCargoTypeList = params => { return axios.post(`${base}/BeerApp/cargoType/update.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//更新商品分类列表
+
+export const getEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/get.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
+
+export const delEvaluateList = params => { return axios.post(`${base}/BeerApp/evaluate/del.do`, params, { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }) };//获取评价
